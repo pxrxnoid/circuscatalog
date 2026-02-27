@@ -466,20 +466,56 @@
             );
         }
 
+        // ─── URL state persistence ───
+
+        function getFiltersFromURL() {
+            try {
+                const hash = window.location.hash.slice(1);
+                if (!hash) return null;
+                return JSON.parse(decodeURIComponent(hash));
+            } catch { return null; }
+        }
+
+        function saveFiltersToURL(state) {
+            const clean = {};
+            if (state.brand !== 'ALL') clean.b = state.brand;
+            if (state.gender !== 'ALL') clean.g = state.gender;
+            if (state.search) clean.q = state.search;
+            if (state.availableOnly) clean.av = 1;
+            if (state.sortBy !== 'newest') clean.s = state.sortBy;
+            if (state.sizes?.length) clean.sz = state.sizes;
+            if (state.wishlist) clean.w = 1;
+            const hash = Object.keys(clean).length ? '#' + encodeURIComponent(JSON.stringify(clean)) : '';
+            history.replaceState(null, '', window.location.pathname + hash);
+        }
+
+        function parseURLState() {
+            try {
+                const hash = window.location.hash.slice(1);
+                if (!hash) return {};
+                return JSON.parse(decodeURIComponent(hash));
+            } catch { return {}; }
+        }
+
         // ─── App ───
 
         function App() {
+            const urlState = useMemo(() => parseURLState(), []);
+
             const [allProducts, setAllProducts] = useState([]);
             const [loading, setLoading] = useState(true);
-            const [search, setSearch] = useState('');
-            const [brand, setBrand] = useState('ALL');
-            const [gender, setGender] = useState('ALL');
-            const [filters, setFilters] = useState({ availableOnly: false, sortBy: 'newest', sizes: [] });
+            const [search, setSearch] = useState(urlState.q || '');
+            const [brand, setBrand] = useState(urlState.b || 'ALL');
+            const [gender, setGender] = useState(urlState.g || 'ALL');
+            const [filters, setFilters] = useState({
+                availableOnly: !!urlState.av,
+                sortBy: urlState.s || 'newest',
+                sizes: urlState.sz || [],
+            });
             const [visible, setVisible] = useState(60);
             const [wishlist, setWishlist] = useState([]);
-            const [showWishlist, setShowWishlist] = useState(false);
+            const [showWishlist, setShowWishlist] = useState(!!urlState.w);
             const [wishlistLoaded, setWishlistLoaded] = useState(false);
-            const loaderRef = useRef(null);
 
             // Load products + wishlist on mount
             useEffect(() => {
@@ -487,15 +523,32 @@
                 loadWishlistRemote().then(w => { setWishlist(w); setWishlistLoaded(true); });
             }, []);
 
+            // Scroll-based infinite loading
             useEffect(() => {
-                const obs = new IntersectionObserver(([e]) => {
-                    if (e.isIntersecting) setVisible(v => v + 40);
-                }, { threshold: 0.1 });
-                if (loaderRef.current) obs.observe(loaderRef.current);
-                return () => obs.disconnect();
-            }, [loading]);
+                const handleScroll = () => {
+                    const scrollBottom = window.innerHeight + window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight;
+                    if (docHeight - scrollBottom < 800) {
+                        setVisible(v => v + 40);
+                    }
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
+            // Reset visible count on filter change
             useEffect(() => { setVisible(60); }, [search, brand, gender, filters, showWishlist]);
+
+            // Persist filters to URL
+            useEffect(() => {
+                saveFiltersToURL({
+                    brand, gender, search,
+                    availableOnly: filters.availableOnly,
+                    sortBy: filters.sortBy,
+                    sizes: filters.sizes,
+                    wishlist: showWishlist,
+                });
+            }, [brand, gender, search, filters, showWishlist]);
 
             const toggleWishlist = useCallback((handle) => {
                 setWishlist(prev => {
@@ -542,6 +595,7 @@
             }, [allProducts, brand, gender, search, filters, showWishlist, wishlist]);
 
             const shown = filtered.slice(0, visible);
+            const hasMore = visible < filtered.length;
 
             return (
                 <div style={{ minHeight: '100vh' }}>
@@ -576,11 +630,19 @@
                             {loading ? <LoadingGrid /> : (
                                 <>
                                     <ProductGrid products={shown} wishlist={wishlist} onToggleWishlist={toggleWishlist} />
-                                    {visible < filtered.length && (
-                                        <div ref={loaderRef} style={{
-                                            textAlign: 'center', padding: '40px 0',
-                                            fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em',
-                                        }}>···</div>
+                                    {hasMore && (
+                                        <div style={{ textAlign: 'center', padding: '30px 0' }}>
+                                            <button onClick={() => setVisible(v => v + 60)} style={{
+                                                padding: '8px 24px', background: 'none',
+                                                border: '1px solid var(--border-med)', borderRadius: 2,
+                                                color: 'var(--text-tertiary)', fontSize: 9,
+                                                letterSpacing: '0.1em', cursor: 'pointer',
+                                                transition: 'all 0.2s', fontFamily: 'var(--font-body)',
+                                            }}
+                                            onMouseEnter={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.color = 'var(--text-secondary)'; }}
+                                            onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}
+                                            >LOAD MORE</button>
+                                        </div>
                                     )}
                                 </>
                             )}
