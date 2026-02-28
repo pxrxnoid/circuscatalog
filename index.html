@@ -16,28 +16,17 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         :root {
-            --void: #050505;
-            --surface-0: #0a0a0a;
-            --surface-1: #0f0f0f;
-            --surface-2: #141414;
-            --surface-3: #1a1a1a;
-            --border-soft: #151515;
-            --border-med: #1f1f1f;
-            --border-strong: #2a2a2a;
-            --text-primary: #d4d4d4;
-            --text-secondary: #8a8a8a;
-            --text-tertiary: #555555;
-            --text-muted: #333333;
+            --void: #050505; --surface-0: #0a0a0a; --surface-1: #0f0f0f;
+            --surface-2: #141414; --surface-3: #1a1a1a;
+            --border-soft: #151515; --border-med: #1f1f1f; --border-strong: #2a2a2a;
+            --text-primary: #d4d4d4; --text-secondary: #8a8a8a;
+            --text-tertiary: #555555; --text-muted: #333333;
             --sold-red: #c41a1a;
             --font-display: 'Cormorant Garamond', 'Georgia', serif;
             --font-body: -apple-system, 'Helvetica Neue', sans-serif;
-            --font-mono: 'SF Mono', 'Menlo', monospace;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--void); color: var(--text-primary);
-            font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
-        }
+        body { background: var(--void); color: var(--text-primary); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         ::selection { background: var(--text-primary); color: var(--void); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--void); }
@@ -47,48 +36,14 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        .skeleton {
-            background: linear-gradient(90deg, var(--surface-1) 25%, var(--surface-2) 50%, var(--surface-1) 75%);
-            background-size: 200% 100%; animation: shimmer 1.8s infinite;
-        }
-        .sold-overlay {
-            position: absolute; inset: 0; background: rgba(5,5,5,0.55);
-            display: flex; align-items: center; justify-content: center; z-index: 2;
-        }
-        .sold-text {
-            font-family: var(--font-display); font-size: 28px; font-weight: 600;
-            font-style: italic; letter-spacing: 0.15em; color: var(--sold-red);
-            text-transform: uppercase; border: 1.5px solid var(--sold-red);
-            padding: 6px 20px; background: rgba(5,5,5,0.6);
-        }
-        .star-btn {
-            position: absolute; top: 8px; right: 8px; z-index: 3;
-            width: 26px; height: 26px; border-radius: 2px;
-            background: rgba(5,5,5,0.5); backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.08);
-            cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .star-btn:hover { background: rgba(5,5,5,0.7); border-color: rgba(255,255,255,0.15); }
-        .similar-btn {
-            position: absolute; bottom: 8px; right: 8px; z-index: 3;
-            width: 26px; height: 26px; border-radius: 2px;
-            background: rgba(5,5,5,0.5); backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.08);
-            cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
+        .skeleton { background: linear-gradient(90deg, var(--surface-1) 25%, var(--surface-2) 50%, var(--surface-1) 75%); background-size: 200% 100%; animation: shimmer 1.8s infinite; }
+        .sold-overlay { position: absolute; inset: 0; background: rgba(5,5,5,0.55); display: flex; align-items: center; justify-content: center; z-index: 2; }
+        .sold-text { font-family: var(--font-display); font-size: 28px; font-weight: 600; font-style: italic; letter-spacing: 0.15em; color: var(--sold-red); text-transform: uppercase; border: 1.5px solid var(--sold-red); padding: 6px 20px; background: rgba(5,5,5,0.6); }
+        .similar-btn { position: absolute; bottom: 8px; right: 8px; z-index: 3; width: 26px; height: 26px; border-radius: 2px; background: rgba(5,5,5,0.5); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
         .similar-btn:hover { background: rgba(5,5,5,0.7); border-color: rgba(255,255,255,0.15); }
-        .wishlist-nav-btn {
-            display: flex; align-items: center; gap: 6px;
-            padding: 6px 12px; background: none;
-            border: 1px solid var(--border-med); border-radius: 2px;
-            color: var(--text-secondary); font-size: 10px;
-            letter-spacing: 0.08em; cursor: pointer;
-            transition: all 0.2s ease; font-family: var(--font-body);
-        }
+        .star-btn { position: absolute; top: 8px; right: 8px; z-index: 3; width: 26px; height: 26px; border-radius: 2px; background: rgba(5,5,5,0.5); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+        .star-btn:hover { background: rgba(5,5,5,0.7); border-color: rgba(255,255,255,0.15); }
+        .wishlist-nav-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: none; border: 1px solid var(--border-med); border-radius: 2px; color: var(--text-secondary); font-size: 10px; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body); }
         .wishlist-nav-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
         .wishlist-nav-btn.active { border-color: var(--text-secondary); color: var(--text-primary); }
     </style>
@@ -97,14 +52,7 @@
     <div id="root"></div>
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef, useCallback } = React;
-
         const BASE_URL = "https://circusbymaniac.shop";
-
-        // ─── JSONBIN CONFIG ───
-        // Replace these with your jsonbin.io credentials
-        const JSONBIN_ID = "69a1bf03d0ea881f40df6059";
-        const JSONBIN_KEY = "$2a$10$ernuwEw6uy7kYZ8AvONsvu1SLa4/0ek3LDnowLlpEPz57/4ULXdqa";
-
         const COLLECTIONS = {
             "ifsixwasnine-beyond-the-time-man": { brand: "IFSIXWASNINE", line: "BEYOND", gender: "MAN" },
             "ifsixwasnine-limited-man": { brand: "IFSIXWASNINE", line: "LIMITED", gender: "MAN" },
@@ -115,42 +63,19 @@
             "l-g-b-beyond-the-time-woman": { brand: "L.G.B.", line: "BEYOND", gender: "WOMAN" },
             "lgb-limited-woman": { brand: "L.G.B.", line: "LIMITED", gender: "WOMAN" },
         };
-
         const JPY_USD = 0.0067;
 
         // ─── Wishlist sync via jsonbin ───
-
+        const JSONBIN_ID = "69a1bf03d0ea881f40df6059";
+        const JSONBIN_KEY = "$2a$10$ernuwEw6uy7kYZ8AvONsvu1SLa4/0ek3LDnowLlpEPz57/4ULXdqa";
         async function loadWishlistRemote() {
-            try {
-                const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_KEY },
-                });
-                const data = await resp.json();
-                console.log('Loaded wishlist:', data);
-                return data.record?.wishlist || [];
-            } catch (e) {
-                console.error('Failed to load wishlist:', e);
-                try { return JSON.parse(localStorage.getItem('circus_wishlist') || '[]'); } catch { return []; }
-            }
+            try { const r = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, { headers: { 'X-Master-Key': JSONBIN_KEY } }); const d = await r.json(); return d.record?.wishlist || []; }
+            catch { try { return JSON.parse(localStorage.getItem('circus_wishlist') || '[]'); } catch { return []; } }
         }
-
         async function saveWishlistRemote(list) {
             localStorage.setItem('circus_wishlist', JSON.stringify(list));
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_KEY,
-                    },
-                    body: JSON.stringify({ wishlist: list }),
-                });
-            } catch (e) {
-                console.error('Failed to save wishlist:', e);
-            }
+            try { await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY }, body: JSON.stringify({ wishlist: list }) }); } catch {}
         }
-
-        // ─── Data ───
 
         async function fetchAllProducts() {
             const allProducts = []; const seen = new Set();
@@ -167,14 +92,13 @@
                             seen.add(p.handle);
                             const variants = p.variants || [];
                             allProducts.push({
-                                handle: p.handle, title: p.title,
-                                image: p.images?.[0]?.src || "",
+                                handle: p.handle, title: p.title, image: p.images?.[0]?.src || "",
                                 price: parseFloat(variants[0]?.price || "0"),
                                 available: variants.some(v => v.available),
                                 sizes: [...new Set(variants.map(v => v.option1).filter(Boolean))],
-                                createdAt: p.created_at, updatedAt: p.updated_at,
+                                createdAt: p.created_at,
                                 url: `${BASE_URL}/collections/${slug}/products/${p.handle}`,
-                                brand: meta.brand, line: meta.line, gender: meta.gender, collection: slug,
+                                brand: meta.brand, line: meta.line, gender: meta.gender,
                             });
                         }
                         if (products.length < 250) break;
@@ -185,104 +109,217 @@
             return allProducts;
         }
 
-        // ─── Smart Similar Search ───
-
+        // ─── Smart Search System ───
         const BRAND_WORDS = ['if', 'six', 'was', 'nine', 'ifsixwasnine', 'l.g.b.', 'lgb', 'l.g.b', 'circus', 'maniac'];
 
-        // Category code → expanded search terms
+        // Garment type codes — these are deprioritized in similar search (model names rank higher)
+        const TYPE_CODES = new Set([
+            'ls', 'hs', 'lsc', 'lsv', 'hsc', 'hsv', 'lsm', 'lsf', 'lsw',
+            'jk', 'pt', 'sbcm', 'sbb', 'bcm', 'tk', 'txs', 'ct', 'vs', 'sw',
+            'pk', 'bl', 'sh', 'bg', 'bt', 'cs', 'op', 'sk', 'ht', 'blt', 'gv',
+            'trd', 'btf',
+        ]);
+
+        // Code → expanded synonyms for broader matching
         const CODE_SYNONYMS = {
-            'jk': ['jk', 'jacket'],
-            'tk': ['tk', 'tank'],
-            'txs': ['txs', 'shirt'],
-            'trd': ['trd', 'trousers', 'pants'],
-            'bcm': ['bcm', 'jeans', 'denim'],
-            'sbcm': ['sbcm', 'jeans', 'denim'],
-            'btf': ['btf', 'jeans', 'denim'],
-            'ct': ['ct', 'coat'],
-            'vs': ['vs', 'vest'],
-            'sw': ['sw', 'sweater'],
-            'pk': ['pk', 'parka'],
-            'bl': ['bl', 'blouson'],
-            'sh': ['sh', 'shorts'],
-            'bg': ['bg', 'bag'],
-            'bt': ['bt', 'boots', 'boot'],
-            'cs': ['cs', 'cutsew'],
-            'op': ['op', 'onepiece', 'dress'],
-            'sk': ['sk', 'skirt'],
-            'ht': ['ht', 'hat'],
-            'blt': ['blt', 'belt'],
-            'gv': ['gv', 'gloves'],
+            'jk': ['jk', 'jacket'], 'tk': ['tk', 'tank'], 'txs': ['txs', 'shirt'],
+            'trd': ['trd', 'trousers', 'pants'], 'bcm': ['bcm', 'jeans', 'denim'],
+            'sbcm': ['sbcm', 'jeans', 'denim'], 'btf': ['btf', 'jeans', 'denim'],
+            'sbb': ['sbb', 'jeans', 'denim'],
+            'ct': ['ct', 'coat'], 'vs': ['vs', 'vest'], 'sw': ['sw', 'sweater'],
+            'pk': ['pk', 'parka'], 'bl': ['bl', 'blouson'], 'sh': ['sh', 'shorts'],
+            'bg': ['bg', 'bag'], 'bt': ['bt', 'boots', 'boot'], 'cs': ['cs', 'cutsew'],
+            'op': ['op', 'onepiece', 'dress'], 'sk': ['sk', 'skirt'], 'ht': ['ht', 'hat'],
+            'blt': ['blt', 'belt'], 'gv': ['gv', 'gloves'],
+            'ls': ['ls', 'longsleeve', 'long sleeve'], 'hs': ['hs', 'halfsleeve', 'half sleeve'],
+            'pt': ['pt', 'pants', 'trousers'],
         };
 
-        function extractSearchTerms(title) {
-            // Split by / and spaces, clean up
-            const parts = title.replace(/\//g, ' ').replace(/[()]/g, '').toLowerCase().split(/\s+/);
-            // Filter out brand words and very short/empty tokens
-            const meaningful = parts.filter(p => p.length > 0 && !BRAND_WORDS.includes(p));
+        // Normalize a title for matching: treat - and / as spaces
+        function normalizeTitle(title) {
+            return title.replace(/[\/-]/g, ' ').replace(/[()]/g, '').toLowerCase();
+        }
 
-            const searchTerms = new Set();
+        // Split a word into sub-variations:
+        // "ss-riders" → ["ss-riders", "ss", "riders"]
+        // "tkm" → ["tkm", "tk"] (strip trailing letters if base is a known code)
+        // "mudmax" → ["mudmax", "mud", "max"] (try splitting compound words)
+        // "belt-002" → ["belt-002", "belt", "002"] (already handled by - split)
+        // "jk3" → ["jk3", "jk"] (strip trailing numbers)
+        // "jk-w" → ["jk-w", "jk", "w"] → ["jk", "w"]
+        function expandWord(word) {
+            const results = new Set();
+            results.add(word);
 
-            for (const part of meaningful) {
-                // Check if this part matches a known code
-                const code = Object.keys(CODE_SYNONYMS).find(c => {
-                    // Match exact code or code followed by numbers (like jk3, bcm2)
-                    return part === c || part.match(new RegExp(`^${c}\\d*$`));
-                });
+            // Split on hyphens
+            if (word.includes('-')) {
+                word.split('-').filter(p => p.length > 0).forEach(p => results.add(p));
+            }
 
-                if (code) {
-                    // Add all synonyms for this code
-                    CODE_SYNONYMS[code].forEach(s => searchTerms.add(s));
-                    // Also add the base code without number
-                    searchTerms.add(code);
-                } else {
-                    // Add the word itself if it's meaningful (longer than 1 char)
-                    if (part.length > 1) searchTerms.add(part);
+            // Strip trailing numbers: jk3 → jk, bcm2 → bcm
+            const noNums = word.replace(/\d+$/, '');
+            if (noNums.length >= 2 && noNums !== word) results.add(noNums);
+
+            // Strip trailing single letter suffix: tkm → tk, jkw → jk
+            // But only if the base (without suffix) is a known code
+            if (word.length >= 3) {
+                const base2 = word.slice(0, 2);
+                const base3 = word.slice(0, 3);
+                if (CODE_SYNONYMS[base2] || TYPE_CODES.has(base2)) results.add(base2);
+                if (CODE_SYNONYMS[base3] || TYPE_CODES.has(base3)) results.add(base3);
+            }
+
+            // Try splitting compound words (camelCase-like or just consonant clusters)
+            // Look for common word boundaries in product names
+            // Strategy: try splitting at every position 2..len-2 and check if both halves appear in other products
+            // Simpler: just try split at positions where a known word starts
+            if (word.length >= 5 && !word.includes('-')) {
+                for (let i = 2; i <= word.length - 2; i++) {
+                    const left = word.slice(0, i);
+                    const right = word.slice(i);
+                    if (left.length >= 2 && right.length >= 2) {
+                        results.add(left);
+                        results.add(right);
+                    }
                 }
             }
 
-            return [...searchTerms];
+            return [...results];
+        }
+
+        // Extract search terms from a product title, categorized as model vs type
+        function extractSearchTerms(title) {
+            const normalized = normalizeTitle(title);
+            const parts = normalized.split(/\s+/).filter(p => p.length > 0 && !BRAND_WORDS.includes(p));
+
+            const modelTerms = new Set();
+            const typeTerms = new Set();
+
+            for (const part of parts) {
+                const expanded = expandWord(part);
+
+                for (const word of expanded) {
+                    if (word.length < 2) continue;
+
+                    // Check if this word (or its base) is a type code
+                    const isType = TYPE_CODES.has(word) ||
+                        Object.keys(CODE_SYNONYMS).some(c => word === c);
+
+                    // Add synonyms for known codes
+                    const code = Object.keys(CODE_SYNONYMS).find(c =>
+                        word === c || word.match(new RegExp(`^${c}\\d*$`))
+                    );
+
+                    if (code) {
+                        const target = isType ? typeTerms : modelTerms;
+                        CODE_SYNONYMS[code].forEach(s => target.add(s));
+                        target.add(code);
+                    } else if (isType) {
+                        typeTerms.add(word);
+                    } else {
+                        // Skip pure numbers like "002" unless they're meaningful
+                        if (/^\d+$/.test(word) && word.length <= 3) continue;
+                        modelTerms.add(word);
+                    }
+                }
+            }
+
+            return {
+                model: [...modelTerms],
+                type: [...typeTerms],
+                all: [...modelTerms, ...typeTerms],
+            };
+        }
+
+        // Smart search bar matching: "mudmax" matches "mud max", "mudmax", etc.
+        function searchMatches(product, query) {
+            const q = query.toLowerCase().trim();
+            const title = normalizeTitle(product.title);
+            const handle = product.handle.toLowerCase();
+
+            // Direct match
+            if (title.includes(q) || handle.includes(q)) return true;
+
+            // Try without spaces: "mud max" query matches "mudmax" title
+            const qNoSpaces = q.replace(/\s+/g, '');
+            const titleNoSpaces = title.replace(/\s+/g, '');
+            if (titleNoSpaces.includes(qNoSpaces)) return true;
+            if (qNoSpaces.length >= 3 && titleNoSpaces.includes(qNoSpaces)) return true;
+
+            // Try splitting query as compound: "mudmax" → check "mud" AND "max" both in title
+            if (q.length >= 5 && !q.includes(' ')) {
+                for (let i = 2; i <= q.length - 2; i++) {
+                    const left = q.slice(0, i);
+                    const right = q.slice(i);
+                    if (left.length >= 2 && right.length >= 2) {
+                        if (title.includes(left) && title.includes(right)) return true;
+                    }
+                }
+            }
+
+            // Also try expanded words from query
+            const qParts = q.replace(/[-\/]/g, ' ').split(/\s+/).filter(p => p.length >= 2);
+            if (qParts.length > 1) {
+                // Multi-word query: all parts must match
+                if (qParts.every(p => title.includes(p) || titleNoSpaces.includes(p))) return true;
+            }
+
+            return false;
+        }
+
+        // Score a product for similar search ranking
+        // Higher score = more relevant (model match > type match)
+        function similarScore(product, terms) {
+            const title = normalizeTitle(product.title);
+            const titleNoSpaces = title.replace(/\s+/g, '');
+            let score = 0;
+
+            for (const term of terms.model) {
+                if (title.includes(term) || titleNoSpaces.includes(term)) score += 10;
+            }
+            for (const term of terms.type) {
+                if (title.includes(term) || titleNoSpaces.includes(term)) score += 1;
+            }
+
+            return score;
+        }
+
+        // ─── Size mapping ───
+        const TOP_SIZES = [
+            { label: '0 / XS', values: ['0', 'XS', 'xs'] },
+            { label: '1 / S', values: ['1', 'S', 's'] },
+            { label: '2 / M', values: ['2', 'M', 'm'] },
+            { label: '3 / L', values: ['3', 'L', 'l'] },
+            { label: 'F', values: ['F', 'f', 'ONE SIZE', 'One Size', 'one size', 'FREE', 'Free'] },
+        ];
+        const BOTTOM_SIZES = ['26', '27', '28', '29', '30', '31', '32', '33', 'F'];
+
+        // ─── My Size (gender-aware) ───
+        const MY_SIZE = {
+            tops: { MAN: ['1','S','s','2','M','m','3','L','l'], WOMAN: ['2','M','m','3','L','l'] },
+            bottoms: ['29','30','31'],
+            free: ['F','f','ONE SIZE','One Size','one size','FREE','Free'],
+        };
+        function matchesMySize(p) {
+            const valid = [...(MY_SIZE.tops[p.gender] || MY_SIZE.tops.MAN), ...MY_SIZE.bottoms, ...MY_SIZE.free];
+            return p.sizes.some(s => valid.includes(s));
         }
 
         // ─── Components ───
 
-        function Header({ count, loading, wishlistCount, showWishlist, onToggleWishlist, onLogoClick }) {
+        function Header({ count, loading, onLogoClick, wishlistCount, showWishlist, onToggleWishlist }) {
             return (
-                <header style={{
-                    position: 'sticky', top: 0, zIndex: 100,
-                    borderBottom: '1px solid var(--border-soft)',
-                    background: 'rgba(5,5,5,0.9)',
-                    backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-                }}>
-                    <div style={{
-                        maxWidth: 1440, margin: '0 auto', padding: '14px 24px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    }}>
-                        <button onClick={onLogoClick} style={{
-                            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                        }}>
-                            <h1 style={{
-                                fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 300,
-                                fontStyle: 'italic', letterSpacing: '0.08em', color: 'var(--text-primary)',
-                                transition: 'opacity 0.2s',
-                            }}>
+                <header style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-soft)', background: 'rgba(5,5,5,0.9)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}>
+                    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <button onClick={onLogoClick} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 300, fontStyle: 'italic', letterSpacing: '0.08em', color: 'var(--text-primary)' }}>
                                 Circus <span style={{ fontWeight: 400, fontStyle: 'normal', color: 'var(--text-tertiary)', fontSize: 14 }}>by</span> Maniac
                             </h1>
                         </button>
-
                         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                            <span style={{
-                                fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.12em',
-                            }}>
-                                {loading ? 'LOADING...' : `${count} ITEMS`}
-                            </span>
-
-                            <button
-                                className={`wishlist-nav-btn ${showWishlist ? 'active' : ''}`}
-                                onClick={onToggleWishlist}
-                            >
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill={showWishlist ? 'var(--text-primary)' : 'none'} stroke="currentColor" strokeWidth="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
+                            <span style={{ fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.12em' }}>{loading ? 'LOADING...' : `${count} ITEMS`}</span>
+                            <button className={`wishlist-nav-btn ${showWishlist ? 'active' : ''}`} onClick={onToggleWishlist}>
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill={showWishlist ? 'var(--text-primary)' : 'none'} stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                                 ({wishlistCount})
                             </button>
                         </div>
@@ -320,49 +357,40 @@
             );
         }
 
-        // ─── My Size preferences (gender-aware) ───
-        const MY_SIZE = {
-            tops: { MAN: ['1', 'S', 's', '2', 'M', 'm', '3', 'L', 'l'], WOMAN: ['2', 'M', 'm', '3', 'L', 'l'] },
-            bottoms: ['29', '30', '31'],
-            free: ['F', 'f', 'ONE SIZE', 'One Size', 'one size', 'FREE', 'Free'],
-        };
-
-        function matchesMySize(product) {
-            const validTops = MY_SIZE.tops[product.gender] || MY_SIZE.tops.MAN;
-            const allValid = [...validTops, ...MY_SIZE.bottoms, ...MY_SIZE.free];
-            return product.sizes.some(s => allValid.includes(s));
-        }
-
-        // ─── Size mapping ───
-
-        const TOP_SIZES = [
-            { label: '0 / XS', values: ['0', 'XS', 'xs'] },
-            { label: '1 / S', values: ['1', 'S', 's'] },
-            { label: '2 / M', values: ['2', 'M', 'm'] },
-            { label: '3 / L', values: ['3', 'L', 'l'] },
-            { label: 'F', values: ['F', 'f', 'ONE SIZE', 'One Size', 'one size', 'FREE', 'Free'] },
-        ];
-
-        const BOTTOM_SIZES = [
-            '26', '27', '28', '29', '30', '31', '32', '33', 'F',
-        ];
-
         function SizeDropdown({ activeSizes, onToggle }) {
             const [open, setOpen] = useState(false);
             const ref = useRef(null);
-
-            // Close on outside click
+            const btnRef = useRef(null);
+            const [pos, setPos] = useState({ left: 0 });
             useEffect(() => {
                 const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
                 document.addEventListener('mousedown', handler);
                 return () => document.removeEventListener('mousedown', handler);
             }, []);
-
+            useEffect(() => {
+                if (open && btnRef.current) {
+                    const rect = btnRef.current.getBoundingClientRect();
+                    const menuW = 200;
+                    const centerX = rect.left + rect.width / 2 - menuW / 2;
+                    const safeLeft = Math.max(8, Math.min(centerX, window.innerWidth - menuW - 8));
+                    setPos({ left: safeLeft - rect.left + (rect.width / 2 - menuW / 2) < -rect.left + 8 ? 8 - rect.left : centerX - rect.left });
+                }
+            }, [open]);
             const activeCount = activeSizes.length;
-
+            // Compute safe left so dropdown doesn't go off screen
+            const getDropdownStyle = () => {
+                if (!btnRef.current) return { left: '50%', transform: 'translateX(-50%)' };
+                const rect = btnRef.current.getBoundingClientRect();
+                const menuW = 200;
+                const idealLeft = -(menuW / 2) + (rect.width / 2);
+                const absLeft = rect.left + idealLeft;
+                if (absLeft < 8) return { left: -(rect.left - 8) };
+                if (absLeft + menuW > window.innerWidth - 8) return { right: -(window.innerWidth - 8 - rect.right) };
+                return { left: idealLeft };
+            };
             return (
                 <div ref={ref} style={{ position: 'relative' }}>
-                    <button onClick={() => setOpen(o => !o)} style={{
+                    <button ref={btnRef} onClick={() => setOpen(o => !o)} style={{
                         padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 5,
                         background: activeCount > 0 ? 'var(--text-primary)' : 'transparent',
                         border: `1px solid ${activeCount > 0 ? 'var(--text-primary)' : 'var(--border-med)'}`,
@@ -371,84 +399,87 @@
                         transition: 'all 0.2s ease', fontFamily: 'var(--font-body)',
                     }}>
                         SIZE{activeCount > 0 ? ` (${activeCount})` : ''}
-                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none"
-                            stroke={activeCount > 0 ? 'var(--void)' : 'var(--text-muted)'} strokeWidth="3"
-                            style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
-                        ><polyline points="6 9 12 15 18 9"/></svg>
+                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke={activeCount > 0 ? 'var(--void)' : 'var(--text-muted)'} strokeWidth="3" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-
                     {open && (
-                        <div style={{
-                            position: 'absolute', top: '100%', left: 0, marginTop: 4,
-                            background: 'var(--surface-2)', border: '1px solid var(--border-med)',
-                            borderRadius: 2, padding: '10px 0', zIndex: 50, minWidth: 180,
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                        }}>
-                            {/* Tops */}
-                            <div style={{ padding: '0 12px 6px', fontSize: 8, color: 'var(--text-muted)',
-                                letterSpacing: '0.12em', fontWeight: 500 }}>TOPS</div>
+                        <div style={{ position: 'absolute', top: '100%', marginTop: 4, background: 'var(--surface-2)', border: '1px solid var(--border-med)', borderRadius: 2, padding: '10px 0', zIndex: 50, width: 200, boxShadow: '0 8px 24px rgba(0,0,0,0.5)', ...getDropdownStyle() }}>
+                            <div style={{ padding: '0 12px 6px', fontSize: 8, color: 'var(--text-muted)', letterSpacing: '0.12em', fontWeight: 500 }}>TOPS</div>
                             {TOP_SIZES.map(size => {
                                 const isActive = size.values.some(v => activeSizes.includes(v));
                                 return (
-                                    <button key={size.label} onClick={() => onToggle(size.values, isActive)} style={{
-                                        display: 'flex', alignItems: 'center', gap: 8, width: '100%',
-                                        padding: '5px 12px', background: 'none', border: 'none',
-                                        cursor: 'pointer', textAlign: 'left', transition: 'background 0.1s',
-                                    }}
-                                    onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-3)'}
-                                    onMouseLeave={e => e.currentTarget.style.background = 'none'}
-                                    >
-                                        <span style={{
-                                            width: 14, height: 14, borderRadius: 2, flexShrink: 0,
-                                            border: `1.5px solid ${isActive ? 'var(--text-primary)' : 'var(--text-muted)'}`,
-                                            background: isActive ? 'var(--text-primary)' : 'none',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        }}>
+                                    <button key={size.label} onClick={() => onToggle(size.values, isActive)} style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '5px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.1s' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-3)'} onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+                                        <span style={{ width: 14, height: 14, borderRadius: 2, flexShrink: 0, border: `1.5px solid ${isActive ? 'var(--text-primary)' : 'var(--text-muted)'}`, background: isActive ? 'var(--text-primary)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {isActive && <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--void)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>}
                                         </span>
-                                        <span style={{ fontSize: 10, color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', letterSpacing: '0.04em' }}>
-                                            {size.label}
-                                        </span>
+                                        <span style={{ fontSize: 10, color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', letterSpacing: '0.04em' }}>{size.label}</span>
                                     </button>
                                 );
                             })}
-
                             <div style={{ height: 1, background: 'var(--border-med)', margin: '6px 0' }} />
-
-                            {/* Bottoms */}
-                            <div style={{ padding: '4px 12px 6px', fontSize: 8, color: 'var(--text-muted)',
-                                letterSpacing: '0.12em', fontWeight: 500 }}>BOTTOMS</div>
+                            <div style={{ padding: '4px 12px 6px', fontSize: 8, color: 'var(--text-muted)', letterSpacing: '0.12em', fontWeight: 500 }}>BOTTOMS</div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, padding: '0 10px 4px' }}>
                                 {BOTTOM_SIZES.map(s => {
                                     const isActive = activeSizes.includes(s);
                                     return (
-                                        <button key={s} onClick={() => onToggle([s], isActive)} style={{
-                                            minWidth: 28, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            padding: '0 4px',
-                                            background: isActive ? 'var(--text-primary)' : 'transparent',
-                                            border: `1px solid ${isActive ? 'var(--text-primary)' : 'var(--border-med)'}`,
-                                            borderRadius: 2, color: isActive ? 'var(--void)' : 'var(--text-tertiary)',
-                                            fontSize: 9, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
-                                            fontFamily: 'var(--font-body)',
-                                        }}>{s}</button>
+                                        <button key={s} onClick={() => onToggle([s], isActive)} style={{ minWidth: 28, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', background: isActive ? 'var(--text-primary)' : 'transparent', border: `1px solid ${isActive ? 'var(--text-primary)' : 'var(--border-med)'}`, borderRadius: 2, color: isActive ? 'var(--void)' : 'var(--text-tertiary)', fontSize: 9, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'var(--font-body)' }}>{s}</button>
                                     );
                                 })}
                             </div>
+                            {activeSizes.length > 0 && (<>
+                                <div style={{ height: 1, background: 'var(--border-med)', margin: '6px 0' }} />
+                                <button onClick={() => onToggle('CLEAR_ALL', false)} style={{ display: 'block', width: '100%', padding: '5px 12px', background: 'none', border: 'none', textAlign: 'left', fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.06em', cursor: 'pointer', transition: 'color 0.15s' }}
+                                onMouseEnter={e => e.target.style.color = 'var(--text-secondary)'} onMouseLeave={e => e.target.style.color = 'var(--text-tertiary)'}>CLEAR ALL</button>
+                            </>)}
+                        </div>
+                    )}
+                </div>
+            );
+        }
 
-                            {activeSizes.length > 0 && (
-                                <>
-                                    <div style={{ height: 1, background: 'var(--border-med)', margin: '6px 0' }} />
-                                    <button onClick={() => onToggle('CLEAR_ALL', false)} style={{
-                                        display: 'block', width: '100%', padding: '5px 12px',
-                                        background: 'none', border: 'none', textAlign: 'left',
-                                        fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.06em',
-                                        cursor: 'pointer', transition: 'color 0.15s',
-                                    }}
-                                    onMouseEnter={e => e.target.style.color = 'var(--text-secondary)'}
-                                    onMouseLeave={e => e.target.style.color = 'var(--text-tertiary)'}
-                                    >CLEAR ALL</button>
-                                </>
-                            )}
+        const SORT_OPTIONS = [
+            { value: 'newest', label: 'NEWEST' },
+            { value: 'oldest', label: 'OLDEST' },
+            { value: 'price-asc', label: 'PRICE ↑' },
+            { value: 'price-desc', label: 'PRICE ↓' },
+            { value: 'title', label: 'A—Z' },
+        ];
+
+        function SortDropdown({ value, onChange }) {
+            const [open, setOpen] = useState(false);
+            const ref = useRef(null);
+            useEffect(() => {
+                const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+                document.addEventListener('mousedown', handler);
+                return () => document.removeEventListener('mousedown', handler);
+            }, []);
+            const current = SORT_OPTIONS.find(o => o.value === value) || SORT_OPTIONS[0];
+            return (
+                <div ref={ref} style={{ position: 'relative' }}>
+                    <button onClick={() => setOpen(o => !o)} style={{
+                        padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 5,
+                        background: 'transparent', border: '1px solid var(--border-med)',
+                        borderRadius: 2, color: 'var(--text-tertiary)',
+                        fontSize: 9, fontWeight: 500, letterSpacing: '0.08em', cursor: 'pointer',
+                        transition: 'all 0.2s ease', fontFamily: 'var(--font-body)',
+                    }}>
+                        {current.label}
+                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="3"
+                            style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    {open && (
+                        <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: 'var(--surface-2)', border: '1px solid var(--border-med)', borderRadius: 2, padding: '4px 0', zIndex: 50, minWidth: 120, boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                            {SORT_OPTIONS.map(opt => (
+                                <button key={opt.value} onClick={() => { onChange(opt.value); setOpen(false); }} style={{
+                                    display: 'block', width: '100%', padding: '6px 12px', background: 'none', border: 'none',
+                                    textAlign: 'left', fontSize: 9, fontWeight: 500, letterSpacing: '0.06em', cursor: 'pointer',
+                                    color: value === opt.value ? 'var(--text-primary)' : 'var(--text-secondary)',
+                                    transition: 'background 0.1s', fontFamily: 'var(--font-body)',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-3)'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                                >{opt.label}</button>
+                            ))}
                         </div>
                     )}
                 </div>
@@ -457,245 +488,99 @@
 
         function Controls({ search, onSearch, gender, onGender, filters, onFilters, mySize, onToggleMySize }) {
             const { availableOnly, sortBy, sizes: activeSizes } = filters;
-
             const handleSizeToggle = (values, isActive) => {
-                if (values === 'CLEAR_ALL') {
-                    onFilters({ ...filters, sizes: [] });
-                    return;
-                }
-                let newSizes;
-                if (isActive) {
-                    newSizes = activeSizes.filter(s => !values.includes(s));
-                } else {
-                    newSizes = [...activeSizes, ...values.filter(v => !activeSizes.includes(v))];
-                }
+                if (values === 'CLEAR_ALL') { onFilters({ ...filters, sizes: [] }); return; }
+                const newSizes = isActive ? activeSizes.filter(s => !values.includes(s)) : [...activeSizes, ...values.filter(v => !activeSizes.includes(v))];
                 onFilters({ ...filters, sizes: newSizes });
             };
-
             return (
                 <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <div style={{ position: 'relative' }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" style={{
-                            position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)',
-                        }}>
-                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        <input type="text" value={search} onChange={e => onSearch(e.target.value)}
-                            placeholder="Search..."
-                            style={{
-                                width: '100%', padding: '9px 12px 9px 34px',
-                                background: 'var(--surface-1)', border: '1px solid var(--border-med)',
-                                borderRadius: 2, color: 'var(--text-primary)', fontSize: 11,
-                                letterSpacing: '0.02em', transition: 'border-color 0.2s',
-                            }}
-                            onFocus={e => e.target.style.borderColor = 'var(--border-strong)'}
-                            onBlur={e => e.target.style.borderColor = 'var(--border-med)'}
-                        />
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="text" value={search} onChange={e => onSearch(e.target.value)} placeholder="Search..." style={{ width: '100%', padding: '9px 12px 9px 34px', background: 'var(--surface-1)', border: '1px solid var(--border-med)', borderRadius: 2, color: 'var(--text-primary)', fontSize: 11, letterSpacing: '0.02em', transition: 'border-color 0.2s' }}
+                            onFocus={e => e.target.style.borderColor = 'var(--border-strong)'} onBlur={e => e.target.style.borderColor = 'var(--border-med)'} />
                     </div>
-
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-                            {['ALL', 'MAN', 'WOMAN'].map(g => (
-                                <Pill key={g} active={gender === g} onClick={() => onGender(g)}>{g}</Pill>
-                            ))}
+                            {['ALL', 'MAN', 'WOMAN'].map(g => (<Pill key={g} active={gender === g} onClick={() => onGender(g)}>{g}</Pill>))}
                             <div style={{ width: 1, height: 20, background: 'var(--border-med)', margin: '0 4px' }} />
                             <SizeDropdown activeSizes={activeSizes} onToggle={handleSizeToggle} />
                             <Pill active={mySize} onClick={onToggleMySize}>MY SIZE</Pill>
                         </div>
                         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                            <Pill active={availableOnly} onClick={() => onFilters({ ...filters, availableOnly: !availableOnly })}>
-                                AVAILABLE
-                            </Pill>
-                            <div style={{ position: 'relative' }}>
-                                <select value={sortBy} onChange={e => onFilters({ ...filters, sortBy: e.target.value })} style={{
-                                    padding: '5px 24px 5px 10px', background: 'var(--surface-1)',
-                                    border: '1px solid var(--border-med)', borderRadius: 2,
-                                    color: 'var(--text-tertiary)', fontSize: 9, fontWeight: 500,
-                                    letterSpacing: '0.08em', cursor: 'pointer', appearance: 'none',
-                                    fontFamily: 'var(--font-body)',
-                                }}>
-                                    <option value="newest">NEWEST</option>
-                                    <option value="oldest">OLDEST</option>
-                                    <option value="price-asc">PRICE ↑</option>
-                                    <option value="price-desc">PRICE ↓</option>
-                                    <option value="title">A—Z</option>
-                                </select>
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="3" style={{
-                                    position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none',
-                                }}><polyline points="6 9 12 15 18 9"/></svg>
-                            </div>
+                            <Pill active={availableOnly} onClick={() => onFilters({ ...filters, availableOnly: !availableOnly })}>AVAILABLE</Pill>
+                            <SortDropdown value={sortBy} onChange={v => onFilters({ ...filters, sortBy: v })} />
                         </div>
                     </div>
                 </div>
             );
         }
 
-        function ProductCard({ product, index, isWishlisted, onToggleWishlist, onSimilar }) {
+        function ProductCard({ product, index, onSimilar, isWishlisted, onToggleWishlist }) {
             const [imgLoaded, setImgLoaded] = useState(false);
             const [hovered, setHovered] = useState(false);
             const usd = Math.round(product.price * JPY_USD);
             const sizeStr = product.sizes.length > 0 ? product.sizes[0] : '—';
-
-            const handleStarClick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleWishlist(product.handle);
-            };
-
-            const handleSimilarClick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onSimilar(product);
-            };
-
+            const handleSimilarClick = (e) => { e.preventDefault(); e.stopPropagation(); onSimilar(product); };
+            const handleStarClick = (e) => { e.preventDefault(); e.stopPropagation(); onToggleWishlist(product.handle); };
             return (
                 <a href={product.url} target="_blank" rel="noopener noreferrer"
                     onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-                    style={{
-                        display: 'block', background: 'var(--surface-0)',
-                        border: `1px solid ${hovered ? 'var(--border-strong)' : 'var(--border-soft)'}`,
-                        overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.25s ease',
-                        animation: `slideUp 0.35s ease ${Math.min(index * 0.015, 0.4)}s both`,
-                        position: 'relative',
-                    }}
-                >
-                    <div style={{
-                        position: 'relative', paddingBottom: '130%', background: 'var(--surface-1)', overflow: 'hidden',
-                    }}>
+                    style={{ display: 'block', background: 'var(--surface-0)', border: `1px solid ${hovered ? 'var(--border-strong)' : 'var(--border-soft)'}`, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.25s ease', animation: `slideUp 0.35s ease ${Math.min(index * 0.015, 0.4)}s both` }}>
+                    <div style={{ position: 'relative', paddingBottom: '130%', background: 'var(--surface-1)', overflow: 'hidden' }}>
                         {!imgLoaded && <div className="skeleton" style={{ position: 'absolute', inset: 0 }} />}
                         {product.image && (
-                            <img
-                                src={product.image.replace(/(\.\w+)\?/, '_600x600$1?')}
-                                alt={product.title} loading="lazy"
+                            <img src={product.image.replace(/(\.\w+)\?/, '_600x600$1?')} alt={product.title} loading="lazy"
                                 onLoad={() => setImgLoaded(true)}
-                                style={{
-                                    position: 'absolute', inset: 0, width: '100%', height: '100%',
-                                    objectFit: 'cover', opacity: imgLoaded ? 1 : 0,
-                                    transition: 'opacity 0.4s ease, transform 0.5s ease',
-                                    transform: hovered ? 'scale(1.04)' : 'scale(1)',
-                                    filter: !product.available ? 'saturate(0.3)' : 'none',
-                                }}
-                            />
+                                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.4s ease, transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)', filter: !product.available ? 'saturate(0.3)' : 'none' }} />
                         )}
-
-                        {!product.available && (
-                            <div className="sold-overlay"><div className="sold-text">Sold</div></div>
-                        )}
-
-                        {/* Star - wishlist */}
-                        <button
-                            className={`star-btn ${isWishlisted ? 'active' : ''}`}
-                            onClick={handleStarClick}
-                        >
-                            <svg width="12" height="12" viewBox="0 0 24 24"
-                                fill={isWishlisted ? '#d4d4d4' : 'none'}
-                                stroke="#d4d4d4" strokeWidth="2"
-                            >
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
+                        {!product.available && (<div className="sold-overlay"><div className="sold-text">Sold</div></div>)}
+                        <button className="star-btn" onClick={handleStarClick}>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill={isWishlisted ? '#d4d4d4' : 'none'} stroke="#d4d4d4" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                         </button>
-
-                        {/* Similar search */}
                         <button className="similar-btn" onClick={handleSimilarClick}>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" strokeWidth="2" strokeLinecap="round">
-                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                            </svg>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                         </button>
                     </div>
-
                     <div style={{ padding: '10px 10px 12px' }}>
-                        <h3 style={{
-                            fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 400,
-                            color: product.available ? 'var(--text-primary)' : 'var(--text-secondary)',
-                            lineHeight: 1.35, marginBottom: 5,
-                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>{product.title}</h3>
-
-                        <div style={{
-                            fontSize: 13, fontWeight: 500,
-                            color: product.available ? 'var(--text-primary)' : 'var(--text-secondary)',
-                            marginBottom: 8, letterSpacing: '0.02em',
-                        }}>
-                            ${usd}
-                            <span style={{
-                                color: 'var(--text-tertiary)', fontSize: 11, marginLeft: 6, fontWeight: 400,
-                            }}>¥{product.price.toLocaleString()}</span>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 400, color: product.available ? 'var(--text-primary)' : 'var(--text-secondary)', lineHeight: 1.35, marginBottom: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.title}</h3>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: product.available ? 'var(--text-primary)' : 'var(--text-secondary)', marginBottom: 8, letterSpacing: '0.02em' }}>
+                            ${usd}<span style={{ color: 'var(--text-tertiary)', fontSize: 11, marginLeft: 6, fontWeight: 400 }}>¥{product.price.toLocaleString()}</span>
                         </div>
-
-                        <div style={{
-                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontSize: 10, letterSpacing: '0.06em', color: 'var(--text-secondary)' }}>
-                                {sizeStr === 'ONE SIZE' || sizeStr === 'F' ? 'OS' : sizeStr}
-                                <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>·</span>
-                                {product.gender}
+                                {sizeStr === 'ONE SIZE' || sizeStr === 'F' ? 'OS' : sizeStr}<span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>·</span>{product.gender}
                             </span>
-                            <span style={{
-                                fontSize: 10, letterSpacing: '0.06em', color: 'var(--text-secondary)', fontStyle: 'italic',
-                            }}>{product.line}</span>
+                            <span style={{ fontSize: 10, letterSpacing: '0.06em', color: 'var(--text-secondary)', fontStyle: 'italic' }}>{product.line}</span>
                         </div>
                     </div>
                 </a>
             );
         }
 
-        function ProductGrid({ products, wishlist, onToggleWishlist, onSimilar }) {
-            if (!products.length) {
-                return (
-                    <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-tertiary)' }}>
-                        <p style={{
-                            fontFamily: 'var(--font-display)', fontSize: 20, fontStyle: 'italic',
-                            fontWeight: 300, opacity: 0.5,
-                        }}>Nothing found</p>
-                    </div>
-                );
-            }
+        function ProductGrid({ products, onSimilar, wishlist, onToggleWishlist }) {
+            if (!products.length) return (<div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-tertiary)' }}><p style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontStyle: 'italic', fontWeight: 300, opacity: 0.5 }}>Nothing found</p></div>);
             return (
-                <div style={{
-                    display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8,
-                }}>
-                    {products.map((p, i) => (
-                        <ProductCard key={p.handle} product={p} index={i}
-                            isWishlisted={wishlist.includes(p.handle)}
-                            onToggleWishlist={onToggleWishlist}
-                            onSimilar={onSimilar}
-                        />
-                    ))}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8 }}>
+                    {products.map((p, i) => <ProductCard key={p.handle} product={p} index={i} onSimilar={onSimilar} isWishlisted={wishlist.includes(p.handle)} onToggleWishlist={onToggleWishlist} />)}
                 </div>
             );
         }
 
         function LoadingGrid() {
             return (
-                <div style={{
-                    display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8,
-                }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8 }}>
                     {Array.from({ length: 24 }).map((_, i) => (
-                        <div key={i} style={{
-                            background: 'var(--surface-0)', border: '1px solid var(--border-soft)', overflow: 'hidden',
-                            animation: `fadeIn 0.3s ease ${i * 0.02}s both`,
-                        }}>
+                        <div key={i} style={{ background: 'var(--surface-0)', border: '1px solid var(--border-soft)', overflow: 'hidden', animation: `fadeIn 0.3s ease ${i * 0.02}s both` }}>
                             <div className="skeleton" style={{ paddingBottom: '130%' }} />
-                            <div style={{ padding: 10 }}>
-                                <div className="skeleton" style={{ height: 13, marginBottom: 6 }} />
-                                <div className="skeleton" style={{ height: 11, width: '50%' }} />
-                            </div>
+                            <div style={{ padding: 10 }}><div className="skeleton" style={{ height: 13, marginBottom: 6 }} /><div className="skeleton" style={{ height: 11, width: '50%' }} /></div>
                         </div>
                     ))}
                 </div>
             );
         }
 
-        // ─── URL state persistence ───
-
-        function getFiltersFromURL() {
-            try {
-                const hash = window.location.hash.slice(1);
-                if (!hash) return null;
-                return JSON.parse(decodeURIComponent(hash));
-            } catch { return null; }
-        }
-
+        // ─── URL state ───
         function saveFiltersToURL(state) {
             const clean = {};
             if (state.brand !== 'ALL') clean.b = state.brand;
@@ -709,97 +594,40 @@
             const hash = Object.keys(clean).length ? '#' + encodeURIComponent(JSON.stringify(clean)) : '';
             history.replaceState(null, '', window.location.pathname + hash);
         }
-
-        function parseURLState() {
-            try {
-                const hash = window.location.hash.slice(1);
-                if (!hash) return {};
-                return JSON.parse(decodeURIComponent(hash));
-            } catch { return {}; }
-        }
+        function parseURLState() { try { const h = window.location.hash.slice(1); if (!h) return {}; return JSON.parse(decodeURIComponent(h)); } catch { return {}; } }
 
         // ─── App ───
-
         function App() {
             const urlState = useMemo(() => parseURLState(), []);
-
             const [allProducts, setAllProducts] = useState([]);
             const [loading, setLoading] = useState(true);
             const [search, setSearch] = useState(urlState.q || '');
             const [brand, setBrand] = useState(urlState.b || 'ALL');
             const [gender, setGender] = useState(urlState.g || 'ALL');
-            const [filters, setFilters] = useState({
-                availableOnly: !!urlState.av,
-                sortBy: urlState.s || 'newest',
-                sizes: urlState.sz || [],
-            });
+            const [filters, setFilters] = useState({ availableOnly: !!urlState.av, sortBy: urlState.s || 'newest', sizes: urlState.sz || [] });
             const [visible, setVisible] = useState(60);
+            const [similarTo, setSimilarTo] = useState(null);
             const [wishlist, setWishlist] = useState([]);
             const [showWishlist, setShowWishlist] = useState(!!urlState.w);
-            const [wishlistLoaded, setWishlistLoaded] = useState(false);
-            const [similarTo, setSimilarTo] = useState(null); // { title, terms[] }
             const [mySize, setMySize] = useState(!!urlState.ms);
 
-            // Load products + wishlist on mount
+            useEffect(() => { fetchAllProducts().then(p => { setAllProducts(p); setLoading(false); }); loadWishlistRemote().then(w => setWishlist(w)); }, []);
             useEffect(() => {
-                fetchAllProducts().then(p => { setAllProducts(p); setLoading(false); });
-                loadWishlistRemote().then(w => { setWishlist(w); setWishlistLoaded(true); });
-            }, []);
-
-            // Scroll-based infinite loading
-            useEffect(() => {
-                const handleScroll = () => {
-                    const scrollBottom = window.innerHeight + window.scrollY;
-                    const docHeight = document.documentElement.scrollHeight;
-                    if (docHeight - scrollBottom < 800) {
-                        setVisible(v => v + 40);
-                    }
-                };
+                const handleScroll = () => { if (document.documentElement.scrollHeight - (window.innerHeight + window.scrollY) < 800) setVisible(v => v + 40); };
                 window.addEventListener('scroll', handleScroll, { passive: true });
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
-
-            // Reset visible count on filter change
-            useEffect(() => { setVisible(60); }, [search, brand, gender, filters, showWishlist, similarTo, mySize]);
-
-            // Persist filters to URL
-            useEffect(() => {
-                saveFiltersToURL({
-                    brand, gender, search,
-                    availableOnly: filters.availableOnly,
-                    sortBy: filters.sortBy,
-                    sizes: filters.sizes,
-                    wishlist: showWishlist,
-                    ms: mySize,
-                });
-            }, [brand, gender, search, filters, showWishlist, mySize]);
-
-            const toggleWishlist = useCallback((handle) => {
-                setWishlist(prev => {
-                    const next = prev.includes(handle) ? prev.filter(h => h !== handle) : [...prev, handle];
-                    saveWishlistRemote(next);
-                    return next;
-                });
-            }, []);
+            useEffect(() => { setVisible(60); }, [search, brand, gender, filters, similarTo, showWishlist, mySize]);
+            useEffect(() => { saveFiltersToURL({ brand, gender, search, availableOnly: filters.availableOnly, sortBy: filters.sortBy, sizes: filters.sizes, wishlist: showWishlist, ms: mySize }); }, [brand, gender, search, filters, showWishlist, mySize]);
 
             const handleSimilar = useCallback((product) => {
                 const terms = extractSearchTerms(product.title);
                 setSimilarTo({ title: product.title, terms, handle: product.handle });
-                setSearch('');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setSearch(''); window.scrollTo({ top: 0, behavior: 'smooth' });
             }, []);
-
             const clearSimilar = () => setSimilarTo(null);
-
-            const handleLogoClick = () => {
-                setShowWishlist(false);
-                setSimilarTo(null);
-                setMySize(false);
-                setBrand('ALL');
-                setGender('ALL');
-                setSearch('');
-                setFilters({ availableOnly: false, sortBy: 'newest', sizes: [] });
-            };
+            const toggleWishlist = useCallback(handle => { setWishlist(prev => { const next = prev.includes(handle) ? prev.filter(h => h !== handle) : [...prev, handle]; saveWishlistRemote(next); return next; }); }, []);
+            const handleLogoClick = () => { setSimilarTo(null); setShowWishlist(false); setMySize(false); setBrand('ALL'); setGender('ALL'); setSearch(''); setFilters({ availableOnly: false, sortBy: 'newest', sizes: [] }); };
 
             const filtered = useMemo(() => {
                 let r = allProducts;
@@ -807,108 +635,81 @@
                 if (brand !== 'ALL') r = r.filter(p => p.brand === brand);
                 if (gender !== 'ALL') r = r.filter(p => p.gender === gender);
                 if (search.trim()) {
-                    const q = search.toLowerCase().trim();
-                    r = r.filter(p => p.title.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q));
+                    r = r.filter(p => searchMatches(p, search));
                 }
                 if (similarTo) {
                     r = r.filter(p => {
-                        if (p.handle === similarTo.handle) return false; // exclude the source product
-                        const t = p.title.toLowerCase();
-                        return similarTo.terms.some(term => t.includes(term));
+                        if (p.handle === similarTo.handle) return false;
+                        return similarScore(p, similarTo.terms) > 0;
                     });
                 }
                 if (filters.availableOnly) r = r.filter(p => p.available);
                 if (mySize) r = r.filter(p => matchesMySize(p));
                 if (filters.sizes.length) r = r.filter(p => filters.sizes.some(s => p.sizes.includes(s)));
-                const sorted = [...r];
-                switch (filters.sortBy) {
-                    case 'newest': sorted.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')); break;
-                    case 'oldest': sorted.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || '')); break;
-                    case 'price-asc': sorted.sort((a, b) => a.price - b.price); break;
-                    case 'price-desc': sorted.sort((a, b) => b.price - a.price); break;
-                    case 'title': sorted.sort((a, b) => a.title.localeCompare(b.title)); break;
+                let sorted = [...r];
+                // If similar search is active, sort by relevance first, then by selected sort
+                if (similarTo) {
+                    sorted.sort((a, b) => {
+                        const sa = similarScore(a, similarTo.terms);
+                        const sb = similarScore(b, similarTo.terms);
+                        if (sb !== sa) return sb - sa; // higher score first
+                        // Tiebreak with selected sort
+                        switch (filters.sortBy) {
+                            case 'newest': return (b.createdAt || '').localeCompare(a.createdAt || '');
+                            case 'oldest': return (a.createdAt || '').localeCompare(b.createdAt || '');
+                            case 'price-asc': return a.price - b.price;
+                            case 'price-desc': return b.price - a.price;
+                            case 'title': return a.title.localeCompare(b.title);
+                            default: return 0;
+                        }
+                    });
+                } else {
+                    switch (filters.sortBy) {
+                        case 'newest': sorted.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')); break;
+                        case 'oldest': sorted.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || '')); break;
+                        case 'price-asc': sorted.sort((a, b) => a.price - b.price); break;
+                        case 'price-desc': sorted.sort((a, b) => b.price - a.price); break;
+                        case 'title': sorted.sort((a, b) => a.title.localeCompare(b.title)); break;
+                    }
                 }
                 return sorted;
-            }, [allProducts, brand, gender, search, filters, showWishlist, wishlist, similarTo, mySize]);
+            }, [allProducts, brand, gender, search, filters, similarTo, showWishlist, wishlist, mySize]);
 
             const shown = filtered.slice(0, visible);
             const hasMore = visible < filtered.length;
 
             return (
                 <div style={{ minHeight: '100vh' }}>
-                    <Header
-                        count={filtered.length} loading={loading}
-                        wishlistCount={wishlist.length}
-                        showWishlist={showWishlist}
-                        onToggleWishlist={() => setShowWishlist(w => !w)}
-                        onLogoClick={handleLogoClick}
-                    />
+                    <Header count={filtered.length} loading={loading} onLogoClick={handleLogoClick} wishlistCount={wishlist.length} showWishlist={showWishlist} onToggleWishlist={() => setShowWishlist(w => !w)} />
                     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 16px' }}>
                         <BrandTabs active={brand} onChange={setBrand} />
-                        <Controls
-                            search={search} onSearch={setSearch}
-                            gender={gender} onGender={setGender}
-                            filters={filters} onFilters={setFilters}
-                            mySize={mySize} onToggleMySize={() => setMySize(m => !m)}
-                        />
+                        <Controls search={search} onSearch={setSearch} gender={gender} onGender={setGender} filters={filters} onFilters={setFilters} mySize={mySize} onToggleMySize={() => setMySize(m => !m)} />
                         {!loading && (
-                            <div style={{
-                                fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em',
-                                padding: '0 0 8px',
-                            }}>
+                            <div style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em', padding: '0 0 8px' }}>
                                 {showWishlist && <span style={{ color: 'var(--text-secondary)', marginRight: 6 }}>★ WISHLIST</span>}
-                                {shown.length === filtered.length
-                                    ? `${filtered.length} PRODUCTS`
-                                    : `${shown.length} OF ${filtered.length} PRODUCTS`
-                                }
+                                {shown.length === filtered.length ? `${filtered.length} PRODUCTS` : `${shown.length} OF ${filtered.length} PRODUCTS`}
                             </div>
                         )}
                         {similarTo && (
-                            <div style={{
-                                display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px',
-                                background: 'var(--surface-2)', border: '1px solid var(--border-med)',
-                                borderRadius: 2, marginBottom: 10, flexWrap: 'wrap',
-                            }}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}>
-                                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                                </svg>
-                                <span style={{ fontSize: 10, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>
-                                    Similar to <span style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{similarTo.title}</span>
-                                </span>
-                                <span style={{ fontSize: 9, color: 'var(--text-muted)', marginLeft: 4 }}>
-                                    [{similarTo.terms.join(', ')}]
-                                </span>
-                                <button onClick={clearSimilar} style={{
-                                    marginLeft: 'auto', background: 'none', border: '1px solid var(--border-med)',
-                                    borderRadius: 2, color: 'var(--text-tertiary)', fontSize: 9,
-                                    padding: '2px 8px', cursor: 'pointer', letterSpacing: '0.06em',
-                                    transition: 'all 0.15s',
-                                }}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'var(--surface-2)', border: '1px solid var(--border-med)', borderRadius: 2, marginBottom: 10, flexWrap: 'wrap' }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                                <span style={{ fontSize: 10, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>Similar to <span style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{similarTo.title}</span></span>
+                                <button onClick={clearSimilar} style={{ marginLeft: 'auto', background: 'none', border: '1px solid var(--border-med)', borderRadius: 2, color: 'var(--text-tertiary)', fontSize: 9, padding: '2px 8px', cursor: 'pointer', letterSpacing: '0.06em', transition: 'all 0.15s' }}
                                 onMouseEnter={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.color = 'var(--text-secondary)'; }}
-                                onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}
-                                >CLEAR</button>
+                                onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}>CLEAR</button>
                             </div>
                         )}
                         <div style={{ paddingBottom: 80 }}>
-                            {loading ? <LoadingGrid /> : (
-                                <>
-                                    <ProductGrid products={shown} wishlist={wishlist} onToggleWishlist={toggleWishlist} onSimilar={handleSimilar} />
-                                    {hasMore && (
-                                        <div style={{ textAlign: 'center', padding: '30px 0' }}>
-                                            <button onClick={() => setVisible(v => v + 60)} style={{
-                                                padding: '8px 24px', background: 'none',
-                                                border: '1px solid var(--border-med)', borderRadius: 2,
-                                                color: 'var(--text-tertiary)', fontSize: 9,
-                                                letterSpacing: '0.1em', cursor: 'pointer',
-                                                transition: 'all 0.2s', fontFamily: 'var(--font-body)',
-                                            }}
-                                            onMouseEnter={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.color = 'var(--text-secondary)'; }}
-                                            onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}
-                                            >LOAD MORE</button>
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                            {loading ? <LoadingGrid /> : (<>
+                                <ProductGrid products={shown} onSimilar={handleSimilar} wishlist={wishlist} onToggleWishlist={toggleWishlist} />
+                                {hasMore && (
+                                    <div style={{ textAlign: 'center', padding: '30px 0' }}>
+                                        <button onClick={() => setVisible(v => v + 60)} style={{ padding: '8px 24px', background: 'none', border: '1px solid var(--border-med)', borderRadius: 2, color: 'var(--text-tertiary)', fontSize: 9, letterSpacing: '0.1em', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'var(--font-body)' }}
+                                        onMouseEnter={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.color = 'var(--text-secondary)'; }}
+                                        onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}>LOAD MORE</button>
+                                    </div>
+                                )}
+                            </>)}
                         </div>
                     </div>
                 </div>
