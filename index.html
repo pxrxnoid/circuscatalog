@@ -71,6 +71,16 @@
             transition: all 0.2s ease;
         }
         .star-btn:hover { background: rgba(5,5,5,0.7); border-color: rgba(255,255,255,0.15); }
+        .similar-btn {
+            position: absolute; bottom: 8px; right: 8px; z-index: 3;
+            width: 26px; height: 26px; border-radius: 2px;
+            background: rgba(5,5,5,0.5); backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .similar-btn:hover { background: rgba(5,5,5,0.7); border-color: rgba(255,255,255,0.15); }
         .wishlist-nav-btn {
             display: flex; align-items: center; gap: 6px;
             padding: 6px 12px; background: none;
@@ -175,6 +185,64 @@
             return allProducts;
         }
 
+        // ─── Smart Similar Search ───
+
+        const BRAND_WORDS = ['if', 'six', 'was', 'nine', 'ifsixwasnine', 'l.g.b.', 'lgb', 'l.g.b', 'circus', 'maniac'];
+
+        // Category code → expanded search terms
+        const CODE_SYNONYMS = {
+            'jk': ['jk', 'jacket'],
+            'tk': ['tk', 'tank'],
+            'txs': ['txs', 'shirt'],
+            'trd': ['trd', 'trousers', 'pants'],
+            'bcm': ['bcm', 'jeans', 'denim'],
+            'sbcm': ['sbcm', 'jeans', 'denim'],
+            'btf': ['btf', 'jeans', 'denim'],
+            'ct': ['ct', 'coat'],
+            'vs': ['vs', 'vest'],
+            'sw': ['sw', 'sweater'],
+            'pk': ['pk', 'parka'],
+            'bl': ['bl', 'blouson'],
+            'sh': ['sh', 'shorts'],
+            'bg': ['bg', 'bag'],
+            'bt': ['bt', 'boots', 'boot'],
+            'cs': ['cs', 'cutsew'],
+            'op': ['op', 'onepiece', 'dress'],
+            'sk': ['sk', 'skirt'],
+            'ht': ['ht', 'hat'],
+            'blt': ['blt', 'belt'],
+            'gv': ['gv', 'gloves'],
+        };
+
+        function extractSearchTerms(title) {
+            // Split by / and spaces, clean up
+            const parts = title.replace(/\//g, ' ').replace(/[()]/g, '').toLowerCase().split(/\s+/);
+            // Filter out brand words and very short/empty tokens
+            const meaningful = parts.filter(p => p.length > 0 && !BRAND_WORDS.includes(p));
+
+            const searchTerms = new Set();
+
+            for (const part of meaningful) {
+                // Check if this part matches a known code
+                const code = Object.keys(CODE_SYNONYMS).find(c => {
+                    // Match exact code or code followed by numbers (like jk3, bcm2)
+                    return part === c || part.match(new RegExp(`^${c}\\d*$`));
+                });
+
+                if (code) {
+                    // Add all synonyms for this code
+                    CODE_SYNONYMS[code].forEach(s => searchTerms.add(s));
+                    // Also add the base code without number
+                    searchTerms.add(code);
+                } else {
+                    // Add the word itself if it's meaningful (longer than 1 char)
+                    if (part.length > 1) searchTerms.add(part);
+                }
+            }
+
+            return [...searchTerms];
+        }
+
         // ─── Components ───
 
         function Header({ count, loading, wishlistCount, showWishlist, onToggleWishlist, onLogoClick }) {
@@ -252,12 +320,158 @@
             );
         }
 
-        function Controls({ search, onSearch, gender, onGender, filters, onFilters, sizes }) {
+        // ─── My Size preferences (gender-aware) ───
+        const MY_SIZE = {
+            tops: { MAN: ['1', 'S', 's', '2', 'M', 'm', '3', 'L', 'l'], WOMAN: ['2', 'M', 'm', '3', 'L', 'l'] },
+            bottoms: ['29', '30', '31'],
+            free: ['F', 'f', 'ONE SIZE', 'One Size', 'one size', 'FREE', 'Free'],
+        };
+
+        function matchesMySize(product) {
+            const validTops = MY_SIZE.tops[product.gender] || MY_SIZE.tops.MAN;
+            const allValid = [...validTops, ...MY_SIZE.bottoms, ...MY_SIZE.free];
+            return product.sizes.some(s => allValid.includes(s));
+        }
+
+        // ─── Size mapping ───
+
+        const TOP_SIZES = [
+            { label: '0 / XS', values: ['0', 'XS', 'xs'] },
+            { label: '1 / S', values: ['1', 'S', 's'] },
+            { label: '2 / M', values: ['2', 'M', 'm'] },
+            { label: '3 / L', values: ['3', 'L', 'l'] },
+            { label: 'F', values: ['F', 'f', 'ONE SIZE', 'One Size', 'one size', 'FREE', 'Free'] },
+        ];
+
+        const BOTTOM_SIZES = [
+            '26', '27', '28', '29', '30', '31', '32', '33', 'F',
+        ];
+
+        function SizeDropdown({ activeSizes, onToggle }) {
+            const [open, setOpen] = useState(false);
+            const ref = useRef(null);
+
+            // Close on outside click
+            useEffect(() => {
+                const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+                document.addEventListener('mousedown', handler);
+                return () => document.removeEventListener('mousedown', handler);
+            }, []);
+
+            const activeCount = activeSizes.length;
+
+            return (
+                <div ref={ref} style={{ position: 'relative' }}>
+                    <button onClick={() => setOpen(o => !o)} style={{
+                        padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 5,
+                        background: activeCount > 0 ? 'var(--text-primary)' : 'transparent',
+                        border: `1px solid ${activeCount > 0 ? 'var(--text-primary)' : 'var(--border-med)'}`,
+                        borderRadius: 2, color: activeCount > 0 ? 'var(--void)' : 'var(--text-tertiary)',
+                        fontSize: 9, fontWeight: 500, letterSpacing: '0.08em', cursor: 'pointer',
+                        transition: 'all 0.2s ease', fontFamily: 'var(--font-body)',
+                    }}>
+                        SIZE{activeCount > 0 ? ` (${activeCount})` : ''}
+                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none"
+                            stroke={activeCount > 0 ? 'var(--void)' : 'var(--text-muted)'} strokeWidth="3"
+                            style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
+                        ><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+
+                    {open && (
+                        <div style={{
+                            position: 'absolute', top: '100%', left: 0, marginTop: 4,
+                            background: 'var(--surface-2)', border: '1px solid var(--border-med)',
+                            borderRadius: 2, padding: '10px 0', zIndex: 50, minWidth: 180,
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                        }}>
+                            {/* Tops */}
+                            <div style={{ padding: '0 12px 6px', fontSize: 8, color: 'var(--text-muted)',
+                                letterSpacing: '0.12em', fontWeight: 500 }}>TOPS</div>
+                            {TOP_SIZES.map(size => {
+                                const isActive = size.values.some(v => activeSizes.includes(v));
+                                return (
+                                    <button key={size.label} onClick={() => onToggle(size.values, isActive)} style={{
+                                        display: 'flex', alignItems: 'center', gap: 8, width: '100%',
+                                        padding: '5px 12px', background: 'none', border: 'none',
+                                        cursor: 'pointer', textAlign: 'left', transition: 'background 0.1s',
+                                    }}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-3)'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                                    >
+                                        <span style={{
+                                            width: 14, height: 14, borderRadius: 2, flexShrink: 0,
+                                            border: `1.5px solid ${isActive ? 'var(--text-primary)' : 'var(--text-muted)'}`,
+                                            background: isActive ? 'var(--text-primary)' : 'none',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        }}>
+                                            {isActive && <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--void)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                                        </span>
+                                        <span style={{ fontSize: 10, color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', letterSpacing: '0.04em' }}>
+                                            {size.label}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+
+                            <div style={{ height: 1, background: 'var(--border-med)', margin: '6px 0' }} />
+
+                            {/* Bottoms */}
+                            <div style={{ padding: '4px 12px 6px', fontSize: 8, color: 'var(--text-muted)',
+                                letterSpacing: '0.12em', fontWeight: 500 }}>BOTTOMS</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, padding: '0 10px 4px' }}>
+                                {BOTTOM_SIZES.map(s => {
+                                    const isActive = activeSizes.includes(s);
+                                    return (
+                                        <button key={s} onClick={() => onToggle([s], isActive)} style={{
+                                            minWidth: 28, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            padding: '0 4px',
+                                            background: isActive ? 'var(--text-primary)' : 'transparent',
+                                            border: `1px solid ${isActive ? 'var(--text-primary)' : 'var(--border-med)'}`,
+                                            borderRadius: 2, color: isActive ? 'var(--void)' : 'var(--text-tertiary)',
+                                            fontSize: 9, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
+                                            fontFamily: 'var(--font-body)',
+                                        }}>{s}</button>
+                                    );
+                                })}
+                            </div>
+
+                            {activeSizes.length > 0 && (
+                                <>
+                                    <div style={{ height: 1, background: 'var(--border-med)', margin: '6px 0' }} />
+                                    <button onClick={() => onToggle('CLEAR_ALL', false)} style={{
+                                        display: 'block', width: '100%', padding: '5px 12px',
+                                        background: 'none', border: 'none', textAlign: 'left',
+                                        fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.06em',
+                                        cursor: 'pointer', transition: 'color 0.15s',
+                                    }}
+                                    onMouseEnter={e => e.target.style.color = 'var(--text-secondary)'}
+                                    onMouseLeave={e => e.target.style.color = 'var(--text-tertiary)'}
+                                    >CLEAR ALL</button>
+                                </>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function Controls({ search, onSearch, gender, onGender, filters, onFilters, mySize, onToggleMySize }) {
             const { availableOnly, sortBy, sizes: activeSizes } = filters;
-            const toggleSize = s => {
-                const ns = activeSizes.includes(s) ? activeSizes.filter(x => x !== s) : [...activeSizes, s];
-                onFilters({ ...filters, sizes: ns });
+
+            const handleSizeToggle = (values, isActive) => {
+                if (values === 'CLEAR_ALL') {
+                    onFilters({ ...filters, sizes: [] });
+                    return;
+                }
+                let newSizes;
+                if (isActive) {
+                    newSizes = activeSizes.filter(s => !values.includes(s));
+                } else {
+                    newSizes = [...activeSizes, ...values.filter(v => !activeSizes.includes(v))];
+                }
+                onFilters({ ...filters, sizes: newSizes });
             };
+
             return (
                 <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <div style={{ position: 'relative' }}>
@@ -285,16 +499,8 @@
                                 <Pill key={g} active={gender === g} onClick={() => onGender(g)}>{g}</Pill>
                             ))}
                             <div style={{ width: 1, height: 20, background: 'var(--border-med)', margin: '0 4px' }} />
-                            {sizes.map(s => (
-                                <button key={s} onClick={() => toggleSize(s)} style={{
-                                    width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    background: activeSizes.includes(s) ? 'var(--text-primary)' : 'transparent',
-                                    border: `1px solid ${activeSizes.includes(s) ? 'var(--text-primary)' : 'var(--border-med)'}`,
-                                    borderRadius: 2, color: activeSizes.includes(s) ? 'var(--void)' : 'var(--text-tertiary)',
-                                    fontSize: 10, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
-                                    fontFamily: 'var(--font-body)',
-                                }}>{s}</button>
-                            ))}
+                            <SizeDropdown activeSizes={activeSizes} onToggle={handleSizeToggle} />
+                            <Pill active={mySize} onClick={onToggleMySize}>MY SIZE</Pill>
                         </div>
                         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                             <Pill active={availableOnly} onClick={() => onFilters({ ...filters, availableOnly: !availableOnly })}>
@@ -324,7 +530,7 @@
             );
         }
 
-        function ProductCard({ product, index, isWishlisted, onToggleWishlist }) {
+        function ProductCard({ product, index, isWishlisted, onToggleWishlist, onSimilar }) {
             const [imgLoaded, setImgLoaded] = useState(false);
             const [hovered, setHovered] = useState(false);
             const usd = Math.round(product.price * JPY_USD);
@@ -334,6 +540,12 @@
                 e.preventDefault();
                 e.stopPropagation();
                 onToggleWishlist(product.handle);
+            };
+
+            const handleSimilarClick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSimilar(product);
             };
 
             return (
@@ -370,7 +582,7 @@
                             <div className="sold-overlay"><div className="sold-text">Sold</div></div>
                         )}
 
-                        {/* Star */}
+                        {/* Star - wishlist */}
                         <button
                             className={`star-btn ${isWishlisted ? 'active' : ''}`}
                             onClick={handleStarClick}
@@ -380,6 +592,13 @@
                                 stroke="#d4d4d4" strokeWidth="2"
                             >
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </button>
+
+                        {/* Similar search */}
+                        <button className="similar-btn" onClick={handleSimilarClick}>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" strokeWidth="2" strokeLinecap="round">
+                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                             </svg>
                         </button>
                     </div>
@@ -420,7 +639,7 @@
             );
         }
 
-        function ProductGrid({ products, wishlist, onToggleWishlist }) {
+        function ProductGrid({ products, wishlist, onToggleWishlist, onSimilar }) {
             if (!products.length) {
                 return (
                     <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-tertiary)' }}>
@@ -439,6 +658,7 @@
                         <ProductCard key={p.handle} product={p} index={i}
                             isWishlisted={wishlist.includes(p.handle)}
                             onToggleWishlist={onToggleWishlist}
+                            onSimilar={onSimilar}
                         />
                     ))}
                 </div>
@@ -485,6 +705,7 @@
             if (state.sortBy !== 'newest') clean.s = state.sortBy;
             if (state.sizes?.length) clean.sz = state.sizes;
             if (state.wishlist) clean.w = 1;
+            if (state.ms) clean.ms = 1;
             const hash = Object.keys(clean).length ? '#' + encodeURIComponent(JSON.stringify(clean)) : '';
             history.replaceState(null, '', window.location.pathname + hash);
         }
@@ -516,6 +737,8 @@
             const [wishlist, setWishlist] = useState([]);
             const [showWishlist, setShowWishlist] = useState(!!urlState.w);
             const [wishlistLoaded, setWishlistLoaded] = useState(false);
+            const [similarTo, setSimilarTo] = useState(null); // { title, terms[] }
+            const [mySize, setMySize] = useState(!!urlState.ms);
 
             // Load products + wishlist on mount
             useEffect(() => {
@@ -537,7 +760,7 @@
             }, []);
 
             // Reset visible count on filter change
-            useEffect(() => { setVisible(60); }, [search, brand, gender, filters, showWishlist]);
+            useEffect(() => { setVisible(60); }, [search, brand, gender, filters, showWishlist, similarTo, mySize]);
 
             // Persist filters to URL
             useEffect(() => {
@@ -547,8 +770,9 @@
                     sortBy: filters.sortBy,
                     sizes: filters.sizes,
                     wishlist: showWishlist,
+                    ms: mySize,
                 });
-            }, [brand, gender, search, filters, showWishlist]);
+            }, [brand, gender, search, filters, showWishlist, mySize]);
 
             const toggleWishlist = useCallback((handle) => {
                 setWishlist(prev => {
@@ -558,19 +782,24 @@
                 });
             }, []);
 
+            const handleSimilar = useCallback((product) => {
+                const terms = extractSearchTerms(product.title);
+                setSimilarTo({ title: product.title, terms, handle: product.handle });
+                setSearch('');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, []);
+
+            const clearSimilar = () => setSimilarTo(null);
+
             const handleLogoClick = () => {
                 setShowWishlist(false);
+                setSimilarTo(null);
+                setMySize(false);
                 setBrand('ALL');
                 setGender('ALL');
                 setSearch('');
                 setFilters({ availableOnly: false, sortBy: 'newest', sizes: [] });
             };
-
-            const availSizes = useMemo(() => {
-                const s = new Set();
-                allProducts.forEach(p => p.sizes.forEach(x => s.add(x)));
-                return ['0', '1', '2', '3', 'F'].filter(x => s.has(x));
-            }, [allProducts]);
 
             const filtered = useMemo(() => {
                 let r = allProducts;
@@ -581,7 +810,15 @@
                     const q = search.toLowerCase().trim();
                     r = r.filter(p => p.title.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q));
                 }
+                if (similarTo) {
+                    r = r.filter(p => {
+                        if (p.handle === similarTo.handle) return false; // exclude the source product
+                        const t = p.title.toLowerCase();
+                        return similarTo.terms.some(term => t.includes(term));
+                    });
+                }
                 if (filters.availableOnly) r = r.filter(p => p.available);
+                if (mySize) r = r.filter(p => matchesMySize(p));
                 if (filters.sizes.length) r = r.filter(p => filters.sizes.some(s => p.sizes.includes(s)));
                 const sorted = [...r];
                 switch (filters.sortBy) {
@@ -592,7 +829,7 @@
                     case 'title': sorted.sort((a, b) => a.title.localeCompare(b.title)); break;
                 }
                 return sorted;
-            }, [allProducts, brand, gender, search, filters, showWishlist, wishlist]);
+            }, [allProducts, brand, gender, search, filters, showWishlist, wishlist, similarTo, mySize]);
 
             const shown = filtered.slice(0, visible);
             const hasMore = visible < filtered.length;
@@ -612,7 +849,7 @@
                             search={search} onSearch={setSearch}
                             gender={gender} onGender={setGender}
                             filters={filters} onFilters={setFilters}
-                            sizes={availSizes}
+                            mySize={mySize} onToggleMySize={() => setMySize(m => !m)}
                         />
                         {!loading && (
                             <div style={{
@@ -626,10 +863,36 @@
                                 }
                             </div>
                         )}
+                        {similarTo && (
+                            <div style={{
+                                display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px',
+                                background: 'var(--surface-2)', border: '1px solid var(--border-med)',
+                                borderRadius: 2, marginBottom: 10, flexWrap: 'wrap',
+                            }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}>
+                                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                                </svg>
+                                <span style={{ fontSize: 10, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>
+                                    Similar to <span style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{similarTo.title}</span>
+                                </span>
+                                <span style={{ fontSize: 9, color: 'var(--text-muted)', marginLeft: 4 }}>
+                                    [{similarTo.terms.join(', ')}]
+                                </span>
+                                <button onClick={clearSimilar} style={{
+                                    marginLeft: 'auto', background: 'none', border: '1px solid var(--border-med)',
+                                    borderRadius: 2, color: 'var(--text-tertiary)', fontSize: 9,
+                                    padding: '2px 8px', cursor: 'pointer', letterSpacing: '0.06em',
+                                    transition: 'all 0.15s',
+                                }}
+                                onMouseEnter={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.color = 'var(--text-secondary)'; }}
+                                onMouseLeave={e => { e.target.style.borderColor = 'var(--border-med)'; e.target.style.color = 'var(--text-tertiary)'; }}
+                                >CLEAR</button>
+                            </div>
+                        )}
                         <div style={{ paddingBottom: 80 }}>
                             {loading ? <LoadingGrid /> : (
                                 <>
-                                    <ProductGrid products={shown} wishlist={wishlist} onToggleWishlist={toggleWishlist} />
+                                    <ProductGrid products={shown} wishlist={wishlist} onToggleWishlist={toggleWishlist} onSimilar={handleSimilar} />
                                     {hasMore && (
                                         <div style={{ textAlign: 'center', padding: '30px 0' }}>
                                             <button onClick={() => setVisible(v => v + 60)} style={{
